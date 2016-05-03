@@ -1,0 +1,43 @@
+postgresql:
+  image: sameersbn/postgresql:9.4-20
+  environment:
+    - DB_USER=redmine
+    - DB_PASS=password
+    - DB_NAME=redmine_production
+  volumes:
+    - /var/lib/postgresql
+
+redmine:
+  image: sameersbn/redmine:3.2.1-4
+  links:
+    - postgresql:postgresql
+  environment:
+    - TZ=America/Argentina
+
+    - REDMINE_PORT=10083
+    - REDMINE_HTTPS=false
+    - REDMINE_RELATIVE_URL_ROOT=
+    - REDMINE_SECRET_TOKEN=
+
+    - REDMINE_SUDO_MODE_ENABLED=false
+    - REDMINE_SUDO_MODE_TIMEOUT=15
+
+    - REDMINE_CONCURRENT_UPLOADS=2
+
+    - REDMINE_BACKUP_SCHEDULE=daily
+    - REDMINE_BACKUP_EXPIRY=604800
+    - REDMINE_BACKUP_TIME=02:00
+
+    - SMTP_ENABLED=true
+    - SMTP_METHOD=smtp
+    - SMTP_DOMAIN=unlu.edu.ar
+    - SMTP_HOST=mail.unlu.edu,ar
+    - SMTP_PORT=25
+    - SMTP_USER=redminedesarrollo@unlu.edu.ar
+    - SMTP_AUTHENTICATION=none
+    
+  ports:
+    - "10083:10083"
+    - "8800:80"
+  volumes:
+    - /home/redmine/data
